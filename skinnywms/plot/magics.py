@@ -403,6 +403,10 @@ class Styler(datatypes.Styler):
 
     log = logging.getLogger(__name__)
 
+    def __init__(self, args) :
+        self.log.info(str(args))
+
+
     def geo_styles(self, field, ncvar, path, variable):
         with LOCK:
             try:

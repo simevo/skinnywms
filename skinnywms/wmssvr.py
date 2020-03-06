@@ -39,6 +39,9 @@ parser.add_argument("--port", default=5000, help="Port number")
 parser.add_argument(
     "--baselayer", default="", help="Path to a directory where to find the baselayer"
 )
+parser.add_argument(
+    "--magics-prefix", default="magics", help="Prefix used to pass information to Magics"
+)
 
 
 args = parser.parse_args()
@@ -49,7 +52,7 @@ if args.style != "":
 server = WMSServer(
     Availability(args.path),
     Plotter(args.baselayer),
-    Styler())
+    Styler(args))
 
 
 
