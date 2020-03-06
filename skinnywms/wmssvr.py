@@ -18,35 +18,32 @@ from .data.fs import Availability
 
 application = Flask(__name__)
 
-demo = os.path.join(os.path.dirname(__file__),
-                    'testdata',
-                    'sfc.grib')
+demo = os.path.join(os.path.dirname(__file__), "testdata", "sfc.grib")
 
 demo = os.environ.get("SKINNYWMS_DATA_PATH", demo)
 
-parser = argparse.ArgumentParser(description='Simple WMS server')
+parser = argparse.ArgumentParser(description="Simple WMS server")
 
-parser.add_argument('-f', '--path',
-                    default=demo,
-                    help='Path to a GRIB or NetCDF file, or a directory\
-                         containing GRIB and/or NetCDF files.')
-parser.add_argument('--style',
-                    default='',
-                    help='Path to a directory where to find the styles')
-parser.add_argument('--host',
-                    default="127.0.0.1",
-                    help='Hostname')
-parser.add_argument('--port',
-                    default=5000,
-                    help='Port number')
-parser.add_argument('--baselayer',
-                    default='',
-                    help='Path to a directory where to find the baselayer')
+parser.add_argument(
+    "-f",
+    "--path",
+    default=demo,
+    help="Path to a GRIB or NetCDF file, or a directory\
+                         containing GRIB and/or NetCDF files.",
+)
+parser.add_argument(
+    "--style", default="", help="Path to a directory where to find the styles"
+)
+parser.add_argument("--host", default="127.0.0.1", help="Hostname")
+parser.add_argument("--port", default=5000, help="Port number")
+parser.add_argument(
+    "--baselayer", default="", help="Path to a directory where to find the baselayer"
+)
 
 
 args = parser.parse_args()
 
-if args.style != '':
+if args.style != "":
     os.environ["MAGICS_STYLE_PATH"] = args.style + ":ecmwf"
 
 server = WMSServer(
@@ -55,25 +52,28 @@ server = WMSServer(
     Styler())
 
 
-@application.route('/wms', methods=['GET'])
+
+
+@application.route("/wms", methods=["GET"])
 def wms():
-    return server.process(request,
-                          Response=Response,
-                          send_file=send_file,
-                          render_template=render_template,
-                          reraise=True)
+    return server.process(
+        request,
+        Response=Response,
+        send_file=send_file,
+        render_template=render_template,
+        reraise=True,
+    )
 
 
-@application.route('/availability', methods=['GET'])
+@application.route("/availability", methods=["GET"])
 def availability():
     return jsonify(server.availability.as_dict())
 
 
-@application.route('/', methods=['GET'])
+@application.route("/", methods=["GET"])
 def index():
-    return render_template('leaflet_demo.html')
+    return render_template("leaflet_demo.html")
 
 
 def execute():
     application.run(port=args.port, host=args.host, debug=True, threaded=False)
-
