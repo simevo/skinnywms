@@ -2,3 +2,5 @@
 # pip freeze > requirements.txt
 Flask==1.1.1
 xarray==0.14.0
+netCDF4
+dask[dataframe]
